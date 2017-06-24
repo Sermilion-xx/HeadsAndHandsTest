@@ -164,6 +164,7 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
                 getString(R.string.error_password_no_lower),
                 getString(R.string.error_password_no_upper),
                 getString(R.string.error_password_no_number)};
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setItems(items, null);
         AlertDialog dialog = builder.create();
