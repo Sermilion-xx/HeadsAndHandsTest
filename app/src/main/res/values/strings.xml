@@ -31,4 +31,5 @@
     <string name="create">Создать</string>
     <string name="close">Закрыть</string>
     <string name="temperature_in_london">Температура в Лондоне: </string>
+    <string name="ACCOUNT_TYPE">BASIC</string>
 </resources>

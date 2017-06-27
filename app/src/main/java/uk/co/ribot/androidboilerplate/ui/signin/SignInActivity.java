@@ -1,5 +1,8 @@
 package uk.co.ribot.androidboilerplate.ui.signin;
 
+import android.accounts.Account;
+import android.accounts.AccountAuthenticatorResponse;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -165,6 +168,24 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
             if (error.contains(EMAIL)) {
                 mEmailField.setError(getString(R.string.error_email_format));
             }
+        }
+    }
+
+    private void createAcount(String username, String password, Intent intent) {
+        Account account = new Account(username, getString(R.string.ACCOUNT_TYPE));
+        AccountManager am = AccountManager.get(this);
+        boolean accountCreated = am.addAccountExplicitly(account, password, null);
+
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            if (accountCreated) {  //Pass the new account back to the account manager
+                AccountAuthenticatorResponse response = extras.getParcelable(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
+                Bundle resultBundle = new Bundle();
+                resultBundle.putString(AccountManager.KEY_ACCOUNT_NAME, username);
+                resultBundle.putString(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.ACCOUNT_TYPE));
+                response.onResult(resultBundle);
+            }
+            finish();
         }
     }
 
