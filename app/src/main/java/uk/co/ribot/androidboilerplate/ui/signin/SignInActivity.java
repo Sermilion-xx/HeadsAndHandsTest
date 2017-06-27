@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -42,8 +44,6 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
     EditText mEmailField;
     @BindView(R.id.password)
     AppCompatEditText mPasswordField;
-    @BindView(R.id.hint)
-    Button mHintButton;
     @BindView(R.id.login)
     Button mLoginButton;
     @BindView(R.id.progressBar)
@@ -67,6 +67,19 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
         mMainPresenter.attachView(this);
         mEmailField.addTextChangedListener(buttonStateChanger);
         mPasswordField.addTextChangedListener(buttonStateChanger);
+        mPasswordField.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (mPasswordField.getRight() - mPasswordField.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        showPasswordHints();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     protected void setupToolbar(int title) {
@@ -85,7 +98,7 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
         mMainPresenter.detachView();
     }
 
-    @OnClick({R.id.forgotPassword, R.id.login, R.id.hint})
+    @OnClick({R.id.forgotPassword, R.id.login})
     public void onClick(Button button) {
         switch (button.getId()) {
             case R.id.login:
@@ -93,9 +106,6 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
                 break;
             case R.id.forgotPassword:
                 showRestorePasswordDialog();
-                break;
-            case R.id.hint:
-                showPasswordHints();
                 break;
         }
     }
